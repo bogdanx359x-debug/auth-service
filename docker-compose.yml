@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  auth-service:
+    build: .
+    restart: unless-stopped
+    environment:
+      PORT: "8080"
+      DB_DSN: postgres://auth_user:auth_pass@db:5432/auth_db?sslmode=disable
+      JWT_SECRET: super_secret_key_change_me
+      TOKEN_TTL_MIN: 60
+      SHUTDOWN_TIMEOUT_SEC: 5
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  db_data:

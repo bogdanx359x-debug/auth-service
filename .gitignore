@@ -1,0 +1,13 @@
+# Binaries
+/auth-service
+
+# Go build cache
+/bin
+/dist
+
+# Env files
+.env
+
+# IDE
+.idea
+.vscode
